@@ -82,15 +82,17 @@ void on_request(http_s *request) {
 int request_contains_shutdown_token(http_s *request) {
   int contains_shutdown_token = 0;
 
-  if (http_parse_body(request) != 0) {
+  FIOBJ body;
+  fio_str_info_s bodyraw = fiobj_data_read(request->body, 1024);
+  if (!fiobj_json2obj(&body, bodyraw.data, bodyraw.len)) {
     return 0;
   }
 
   FIOBJ key = fiobj_str_new("token", 5);
   if (
-    FIOBJ_TYPE_IS(request->params, FIOBJ_T_HASH)  /* check if JSON object is a hash, */
-    && fiobj_hash_get(request->params, key)  /* test for existence of "token", */
-    && !strcmp(fiobj_obj2cstr(fiobj_hash_get(request->params, key)).data,
+    FIOBJ_TYPE_IS(body, FIOBJ_T_HASH)  /* check if JSON object is a hash, */
+    && fiobj_hash_get(body, key)  /* test for existence of "token", */
+    && !strcmp(fiobj_obj2cstr(fiobj_hash_get(body, key)).data,
         getenv("RSHUTDOWN_TOKEN"))  /* and test if token matches RSHUTDOWN_TOKEN */
   ) {
     contains_shutdown_token = 1;

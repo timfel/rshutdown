@@ -54,7 +54,7 @@ set(PACKAGE_LONG_DESCRIPTION "It is primarily intended for shutting down headles
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
 if(NOT CPACK_DEBIAN_PACKAGE_ARCHITECTURE)  # default if not set by toolchain file
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
 endif()
 
 set(CPACK_DEBIAN_PACKAGE_RELEASE "0")  # revision, i.e. changes in packaging
